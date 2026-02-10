@@ -1,0 +1,283 @@
+<div style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; padding: 30px; background-color: white; border-radius: 8px; max-width: 1200px; margin: 0 auto;">
+  
+ <h1 style="color: #1565c0; margin-bottom: 15px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; font-size: 28px; margin-top: 0;">Module 2: Building the Model Context Protocol (MCP) </h1>
+  
+ <p style="color: #666666; font-size: 16px; margin-bottom: 40px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; line-height: 1.5;">
+  In this exercise, you will build a Mule application that queries Salesforce for contract product details.
+ </p>
+  
+ <div style="border-left: 4px solid #e0e0e0; padding: 25px; margin-bottom: 30px; background-color: white;">
+ 
+ <div style="background: linear-gradient(90deg, #059669 0%, #047857 100%); color: white; padding: 15px 20px; border-radius: 6px; margin-bottom: 30px;">
+  <h2 style="color: white; margin: 0; font-size: 18px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-weight: 600;">Exercise: Create the MCP Server On top of System API</h2>
+ </div>
+
+  <!-- Main Step 1 -->
+  <h3 style="color: #1976d2; font-size: 18px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; margin-bottom: 20px; margin-top: 0;">1. Create a new Mule Project:</h3>
+  
+ <div style="margin-left: 30px; line-height: 1.8;">
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">1.1</strong> Click on in the left menu bar. Select <strong> Develop an Integration </strong> and create new project with name
+   </p>
+   <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+      Project Name: {initials}-mcp-salesforce-contract-api
+   </div>
+   
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">1.2</strong> Select <strong> Start from Scratch → Build a Flow </strong>
+   </p>
+   <p style="color: #555555; margin-bottom: 20px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">1.3</strong> Select <strong> Flow Name 1</strong>, Edit in the configuration panel to change it to
+   </p>
+   <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+      Flow Name: mcp-get-contract
+   </div>
+   
+<div style="display: flex; flex-direction: column; align-items: center; margin: 20px 0;">
+   <!-- Top row with 3 images and arrows -->
+   <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+      <img src="https://i.imgur.com/TaGAppC.png" style="width: 30%; height: auto; border-radius: 4px;">
+      <div style="font-size: 24px; color: #333; margin: 0 10px;">→</div>
+      <img src="https://i.imgur.com/k9Tl7Gw.png" style="width: 30%; height: auto; border-radius: 4px;">
+      <div style="font-size: 24px; color: #333; margin: 0 10px;">→</div>
+      <img src="https://i.imgur.com/znfI5B6.png" style="width: 30%; height: auto; border-radius: 4px;">
+   </div>
+   
+   <!-- Down arrow -->
+   <div style="font-size: 24px; color: #333; margin: 10px 0;">↓</div>
+   
+   <!-- Bottom image -->
+   <img src="https://i.imgur.com/21H7z4J.png" style="max-width: 80%; height: auto; border-radius: 4px;">
+</div>
+  </div>
+
+    <h3 style="color: #1976d2; font-size: 18px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; margin-bottom: 20px; margin-top: 40px;">2. Configure MCP Connector:</h3>
+ <div style="margin-left: 30px; line-height: 1.8;">
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">2.1</strong> Click on <strong> + </strong> in the flow path on the main canvas
+   </p>
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">2.2</strong> Search for <strong> MCP </strong> connector
+   </p>
+   <p style="color: #555555; margin-bottom: 20px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">2.3</strong> Select <strong> Tool Listener</strong> operation within the MCP connector 
+   </p>
+   <!-- Bottom image -->
+   <img src="https://i.imgur.com/LqYnVDk.png" style="max-width: 80%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+   <p style="color: #555555; margin-bottom: 20px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">2.4</strong> Select <strong> Tool Listener</strong> processor that was just added
+   </p>
+   <p style="color: #555555; margin-bottom: 15px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">2.5</strong> Click on <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;"> + </strong>  sign next to <strong> Connection Config </strong> to add MCP connector configuration
+   </p>
+   <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+      Connection : <strong> Streamable HTTP </strong>
+<br>Mcp endpoint path : <strong> /mcp </strong>
+<br>Server name : <strong> contract-mcp-server </strong>
+<br>Server version : <strong> 1.0.0 </strong>
+   </div>
+   
+<img src="https://i.imgur.com/Pxat2Jz.png" style="max-width: 80%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+    <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">2.6</strong> Click on <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">"+"</strong> sign next to <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">Listener Configuration</strong> to add HTTP configuration
+    </p>
+    <img src="https://i.imgur.com/hQbwQL4.png" alt="Interface" style="max-width: 100%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+    <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">2.7</strong> Enter the following HTTP configuration details: </p>
+      <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+      Host: 0.0.0.0
+    <br> Port: 8081
+   </div>
+   <img src="https://i.imgur.com/3rioFd8.png" alt="Interface" style="max-width: 100%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">2.8</strong> Click on <strong> Add </strong> again to save the MCP Connection configuration and add tool details </p>
+      <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+      Name: get_contract_details
+    <br> Description: Retrieve the contract details. The contract is identified by the contract Product Number
+   </div>
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">2.9</strong> In the <strong> Parameters Schema </strong> , add the following  </p>
+      <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+<pre style="margin: 0; color: inherit;">{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "partName": {
+      "type": "string",
+      "description": "partName"
+    }
+  },
+  "required": ["partName"]
+}</pre>
+</div>
+<p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">2.10</strong> Click on  <strong> Add </strong> in <strong> Responses </strong> </p>
+    <img src="https://i.imgur.com/T3vdMX7.png" alt="Interface" style="max-width: 100%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">2.11</strong> In Tool response content drop down Select 
+   </p>
+     <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+      Tool response content : Text tool response content
+   </div>
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">2.12</strong> In Text: Click on <strong> fx </strong> and add
+   </p>
+     <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+      write(payload,"application/json")
+   </div>
+    <img src="https://i.imgur.com/V3rXv0T.png" alt="Interface" style="max-width: 100%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+ </div>
+ 
+   <h3 style="color: #1976d2; font-size: 18px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; margin-bottom: 20px; margin-top: 40px;">3. Configure System API:</h3>
+   <div style="margin-left: 30px; line-height: 1.8;">
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">3.1</strong> Click on    <strong> + </strong> in the flow path below the  <strong> MCP connector </strong> </p>
+<p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">3.2</strong> Search for : <strong> HTTP connector </strong> </p>
+
+<p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">3.3</strong> Select  operation  <strong> Request </strong> within the <strong> HTTP connector </strong> </p>
+<p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">3.4</strong> Select   <strong> Request processor </strong> that was just added </p>
+     <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">3.5</strong> Click on   <strong> + </strong> sign next to <strong> Connection Config </strong> to add HTTP connector configuration & configure the HTTP request configuration </p>
+<div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+      Connection: Request
+    <br> Protocol: HTTPS
+    <br> Host: your-system-api-url (just the host name: for example- <strong> tn-salesforce-contract-api-tb6jai.5sc6y6-2.usa-e2.cloudhub.io </strong>)
+    <br>Port: 443
+   </div>
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">3.6</strong> Click on   <strong> Add </strong> </p>
+     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+      <img src="https://i.imgur.com/2fZuAzD.png" style="width: 30%; height: auto; border-radius: 4px;">
+      <div style="font-size: 24px; color: #333; margin: 0 10px;">→</div>
+      <img src="https://i.imgur.com/DEUFRP4.png" style="width: 30%; height: auto; border-radius: 4px;">
+      <div style="font-size: 24px; color: #333; margin: 0 10px;">→</div>
+      <img src="https://i.imgur.com/zYtQYEb.png" style="width: 30%; height: auto; border-radius: 4px;">
+   </div>
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">3.7</strong> Add the following configuration in <strong> HTTP Request </strong> configuration </p>
+<div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+      Method: POST
+    <br> Path: /contract
+    <br> Request - Body: 
+      <br>output json
+          <br>---
+             <br> {
+                <br>partName : payload.partName
+                
+             <br> }
+
+</div>
+<img src="https://i.imgur.com/g8e298c.png" alt="Interface" style="max-width: 100%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+</div>
+
+<h3 style="color: #1976d2; font-size: 18px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; margin-bottom: 20px; margin-top: 40px;">4. Convert to JSON:</h3>
+<div style="margin-left: 30px; line-height: 1.8;">
+<p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">4.1</strong> Click on  
+ <strong> + </strong> in the flow path below the <strong> HTTP Request connector </strong> </p>
+<p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">4.2</strong> Search for
+ <strong> Transform </strong>  connector  </p>
+ <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">4.3</strong> Add the following 
+ <strong> Inline Script </strong>    </p>
+<div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+      %dw 2.0
+<br>output application/json
+<br> ---
+<br> write(payload[0], "application/json")
+   </div>
+   <img src="https://i.imgur.com/A9NW0l5.png" alt="Interface" style="max-width: 100%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+</div>
+
+   <h3 style="color: #1976d2; font-size: 18px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; margin-bottom: 20px; margin-top: 40px;">5. Local Validation:</h3>
+   <div style="margin-left: 30px; line-height: 1.8;">
+<p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">5.1</strong> Select
+ <strong> Run Mule Application </strong>  to run the application locally
+  </p>
+<img src="https://i.imgur.com/3JhCDCf.png" alt="Interface" style="max-width: 100%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+<p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">5.2</strong>  Confirm that the application has started successfully
+  </p>
+<img src="https://i.imgur.com/EESHMZp.png" alt="Interface" style="max-width: 100%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+<p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">5.3</strong> For Testing, add the MCP Server to <strong> Mule Dev Agent </strong> Configuration
+  </p>
+  <div style="margin-left: 30px;">
+  <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">5.3.1 </strong> Click on <strong> Mule Dev Agent </strong> in the left menu bar 
+  </p>
+  <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">5.3.2 </strong> Click on <strong> Manage MCP Servers → Click on Gear Wheel → Click on Configure MCP Servers </strong> and replace the existing configuration with below to add your MCP server to the list,
+  </p>
+  <img src="https://i.imgur.com/C8Gpl0k.png" alt="Interface" style="max-width: 100%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+  
+  <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+<pre style="margin: 0; color: inherit;">{
+ "mcpServers": {
+   "https://www.npmjs.com/package/@mulesoft/mcp-server": {
+     "disabled": false,
+     "timeout": 600,
+     "type": "streamableHttp",
+     "url": "http://127.0.0.1:8686/mcp",
+     "headers": {
+       "x-mcp-client-id": "A4D_CLIENT"
+     }
+   },
+   "contract-mcp-server": {
+     "disabled": false,
+     "timeout": 60,
+     "type": "streamableHttp",
+     "url": "http://localhost:8081/mcp",
+     "headers": {
+       "Accept": "application/json, text/event-stream"
+     }
+   }
+ }
+}</pre>
+</div>
+
+<p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">5.3.3 </strong> Click on <strong> Mule Dev Agent </strong>  in the left menu bar again
+  </p>
+  <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">5.3.4 </strong> Type following prompt in the
+  </p>
+  <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+      Dev Agent chat -  get me contract details for the part - SFP-10G-T-CAT-AO
+ </div>
+  <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">5.3.5 </strong> Validate the response
+  </p>
+  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+      <img src="https://i.imgur.com/29RzMW8.png" style="width: 30%; height: auto; border-radius: 4px;">
+      <div style="font-size: 24px; color: #333; margin: 0 10px;">→</div>
+      <img src="https://i.imgur.com/maPgHR8.png" style="width: 30%; height: auto; border-radius: 4px;">
+      <div style="font-size: 24px; color: #333; margin: 0 10px;">→</div>
+      <img src="https://i.imgur.com/43J9jiw.png" style="width: 30%; height: auto; border-radius: 4px;">
+   </div>
+   </div>
+</div>
+
+   <h3 style="color: #1976d2; font-size: 18px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; margin-bottom: 20px; margin-top: 40px;">6. Deploy MCP Server Application to CloudHub 2.0</h3>
+   <div style="margin-left: 30px; line-height: 1.8;">
+<p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">6.1 </strong> Use Dev Agent to deploy the application to CloudHub 2.0 with the following prompt 
+  </p>
+   <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+      Deploy the Contract MCP Server to CloudHub 2.0. Use Mule 4.10.0 runtime
+ </div>
+ <img src="https://i.imgur.com/S3w9t5O.png" alt="Interface" style="max-width: 100%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+ <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">6.2 </strong> Use Dev Agent again to validate the deployment by adding your deployed MCP server to the <strong> Dev Agent </strong> configuration similar to steps listed above in step <strong> 5.3 </strong>
+  </p>
+  <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">6.3 </strong> Validate output & confirm successful deployment
+  </p>
+  </div>
+ </div>
+</div>

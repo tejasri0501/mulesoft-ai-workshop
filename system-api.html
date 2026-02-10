@@ -1,0 +1,239 @@
+<div style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; padding: 30px; background-color: white; border-radius: 8px; max-width: 1200px; margin: 0 auto;">
+  
+ <h1 style="color: #1565c0; margin-bottom: 15px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; font-size: 28px; margin-top: 0;">Module 1: Building the Salesforce System API</h1>
+  
+ <p style="color: #666666; font-size: 16px; margin-bottom: 40px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; line-height: 1.5;">
+  In this exercise, you will build a Mule application that queries Salesforce for contract product details.
+ </p>
+  <div style="border-left: 4px solid #e0e0e0; padding: 25px; margin-bottom: 30px; background-color: white;">
+ 
+ <div style="background: linear-gradient(90deg, #059669 0%, #047857 100%); color: white; padding: 15px 20px; border-radius: 6px; margin-bottom: 30px;">
+  <h2 style="color: white; margin: 0; font-size: 18px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-weight: 600;">Exercise: Create the System API</h2>
+ </div>
+
+   
+  <!-- Main Step 1 -->
+  <h3 style="color: #1976d2; font-size: 18px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; margin-bottom: 20px; margin-top: 0;">1. Initialize Project:</h3>
+   
+  <!-- Steps 1.1 - 1.3 -->
+  <div style="margin-left: 30px; line-height: 1.8;">
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">1.1</strong> Login to <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">Anypoint Platform</strong> using your credentials as created during self-registration
+   </p>
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">1.2</strong> Click on <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">Get Started</strong> in <strong> Anypoint Code Builder </strong> section 
+   </p>
+   <p style="color: #555555; margin-bottom: 20px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">1.3</strong> Click on <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">Launch</strong>  button in <strong> Your Anypoint Code Builder Cloud IDE, </strong> this opens the Cloud IDE in new tab
+   </p>
+
+  
+  </div>
+
+  <!-- THE ADJUSTED BLOCK -->
+  <div style="margin-left: 30px; color: #555555; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; line-height: 1.5;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">1.4</strong> Log in to Anypoint Platform for the Cloud IDE by clicking on the bottom right of the IDE<br>
+    
+    <img src="https://i.imgur.com/pO9BWos.png" alt="ACB Interface" style="max-width: 100%; height: auto; border-radius: 4px; margin-top: 15px; margin-bottom: -20px;">
+    <!-- Changed to -250px to add a small gap -->
+      <p style="color: #555555; margin-top: 0; padding-top: 0; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; position: relative; z-index: 5;">
+      <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">1.5</strong> Select <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">Develop an Integration</strong> from the left menu
+    </p>
+ 
+   <p style="color: #555555; margin-bottom: 15px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">1.6</strong> Enter Project Name:
+   </p>
+<div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+      Project Name: {initials}-salesforce-contract-api
+   </div>
+      <img src="https://i.imgur.com/pG8LuOQ.png" alt="ACB Interface" style="max-width: 100%; height: auto; border-radius: 4px; margin-top: 15px; margin-bottom: -20px;">
+   <!-- Step 1.6 Image: Standalone (No Grey Box) -->
+     </div>
+
+  <!-- Section 2: Logic Development -->
+  <h3 style="color: #1976d2; font-size: 18px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; margin-bottom: 20px; margin-top: 40px;">2. Logic Development:</h3>
+   
+  <div style="margin-left: 30px; line-height: 1.8;">
+   <p style="color: #555555; margin-bottom: 25px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">2.1</strong> Select <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">Build a Flow</strong> and rename flow name to 
+   <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+      Flow Name: get-contract-flow
+   </div>
+   </p>
+   <img src="https://i.imgur.com/4UFwDAU.png" alt="Interface" style="max-width: 100%; height: auto; border-radius: 4px; display: block; margin-bottom: 20px;">
+   <img src="https://i.imgur.com/f2bKWuI.png" alt="Interface" style="max-width: 100%; height: auto; border-radius: 4px; display: block; margin-bottom: 30px;">
+  </div>
+
+  <!-- Step 2.2 with sub-steps -->
+  <div style="margin-left: 30px; line-height: 1.8; margin-top: 30px;">
+   <p style="color: #555555; margin-bottom: 15px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">2.2</strong> Add an <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">HTTP Listener:</strong>
+   </p>
+   <div style="margin-left: 30px;">
+    <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">2.2.1</strong> Click on <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">+</strong> in the flow path on the main canvas
+    </p>
+    <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">2.2.2</strong> Search for <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">HTTP</strong> connector
+    </p>
+    <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">2.2.3</strong> Select <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">Listener</strong> operation within the HTTP connector
+    </p>
+    <img src="https://i.imgur.com/LmurmeG.png" alt="Interface" style="max-width: 100%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+    <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">2.2.4</strong> Select <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">Listener</strong> processor that was just added
+    </p>
+    <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">2.2.5</strong> Click on <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">"+"</strong> sign next to <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">Connection Config</strong> to add HTTP connector configuration
+    </p>
+    <img src="https://i.imgur.com/SjuZQZ9.png" alt="Interface" style="max-width: 100%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+    <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">2.2.6</strong> Enter the following HTTP configuration details: </p>
+      <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+      Host: 0.0.0.0
+    <br> Port: 8081
+   </div>
+      <img src="https://i.imgur.com/gH8FX9u.png" alt="Interface" style="max-width: 100%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+    <p style="color: #555555; margin-bottom: 25px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">2.2.7</strong> Enter <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">http URI Path:</strong>
+    </p>
+    <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+      Path: /contract
+   </div>
+    <img src="https://i.imgur.com/LzibSIZ.png" alt="Interface" style="max-width: 100%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+   </div>
+  </div>
+
+  <!-- Step 2.3 -->
+  <div style="margin-left: 30px; line-height: 1.8; margin-top: 30px;">
+   <p style="color: #555555; margin-bottom: 15px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">2.3</strong> Add the <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">Salesforce Query</strong> processor by selecting <strong> ‘+’ </strong> under the <strong> ‘Listener’ </strong> component
+   </p>
+   <img src="https://i.imgur.com/kayoAYu.png" alt="Interface" style="max-width: 100%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+   <div style="margin-left: 30px;">
+    <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">2.3.1</strong> Create a new <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">Salesforce Connection</strong>
+    </p>
+    <img src="https://i.imgur.com/RK3CLNb.png" alt="Interface" style="max-width: 100%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+    <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">2.3.2</strong> Configure credentials and click <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">Apply</strong> <br>
+     Note: Credentials will be provided by Salesforce team during workshop
+    </p>
+    <img src="https://i.imgur.com/36cqKBv.png" alt="Interface" style="max-width: 100%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+    <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">2.3.3</strong> Configure the <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">SQL Query</strong>:
+    </p>
+
+    <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+      SELECT Contract_Price__c, Standard_Price__c, Contract__r.Status, Contract__r.ContractNumber, Contract__r.StartDate, Contract__r.EndDate <br> FROM Contract_Product__c WHERE Part_Number__c = ':partName'
+
+   </div>
+    
+    <p style="color: #555555; margin-bottom: 25px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">2.3.4</strong> Parameters:
+    </p>
+     <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+      Key: partName 
+      <br> 
+      Value: payload.partName
+   </div>
+    <img src="https://i.imgur.com/lukPqBs.png" alt="Interface" style="max-width: 100%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+   </div>
+  </div>
+
+  <!-- Section 3: Transform Message -->
+  <h3 style="color: #1976d2; font-size: 18px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; margin-bottom: 20px; margin-top: 40px;">3. Add a Transform message:</h3>
+  <div style="margin-left: 30px; line-height: 1.8;">
+   <p style="color: #555555; margin-bottom: 15px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">3.1</strong> Set the following dataweave expression:
+   </p>
+   <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+      %dw 2.0
+<br>output application/json
+<br>---
+<br>payload
+   </div>
+
+   <img src="https://i.imgur.com/tnumVt5.png" alt="Interface" style="max-width: 100%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+  </div>
+
+  <!-- Section 4: Local Validation -->
+  <h3 style="color: #1976d2; font-size: 18px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; margin-bottom: 20px; margin-top: 40px;">4. Local Validation:</h3>
+  <div style="margin-left: 30px; line-height: 1.8;">
+   <p style="color: #555555; margin-bottom: 15px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">4.1</strong> Select <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;"> Run Mule Application </strong> to run the application locally
+   </p>
+   <img src="https://i.imgur.com/DI6FSY1.png" alt="Interface" style="max-width: 100%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+    <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">4.2</strong> Confirm that the application has started successfully
+   </p>
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">4.3</strong> Click on <strong> + </strong> sign in the terminal window to open a new terminal. Test via Terminal:
+   </p>
+   <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+      curl --location 'http://localhost:8081/contract' \<br>
+      --header 'Content-Type: application/json' \<br>
+      --data '{"partName": "SFP-10G-T-CAT-AO"}'
+   </div>
+   <img src="https://i.imgur.com/grJ6PvP.png" alt="Interface" style="max-width: 100%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+  </div>
+
+  <!-- Section 5: CloudHub Deployment -->
+  <h3 style="color: #1976d2; font-size: 18px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; margin-bottom: 20px; margin-top: 40px;">5. Deploy Application to CloudHub 2.0</h3>
+  <div style="margin-left: 30px; line-height: 1.8;">
+   <p style="color: #555555; margin-bottom: 15px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">5.1</strong> Launch <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">Command Palette</strong> by clicking on the gear wheel at the bottom left of the IDE
+
+   </p>
+   <img src="https://i.imgur.com/bXyXv0O.png" alt="Interface" style="max-width: 100%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">5.2</strong> Type <strong>MuleSoft: </strong> Select <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">Deploy to MuleSoft CloudHub</strong>
+   </p>
+   <img src="https://i.imgur.com/pepBq7E.png" alt="Interface" style="max-width: 100%; border-radius: 4px; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">5.3</strong> Select Business Group: <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">anypoint-cbp-17695426</strong> 
+     (different from below screenshot)
+   </p> 
+   <img src="https://i.imgur.com/xeMGomO.png" alt="Interface" style="max-width: 100%; height: auto;  display: block; margin: 20px 0;">
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">5.4</strong> Select <strong> deployment target as CloudHub 2.0 </strong> 
+   </p>
+   <img src="https://i.imgur.com/UyFepg4.png" style="max-width: 100%; height: auto; border-radius: 4px; display: block; margin: 15px 0;">
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">5.5</strong> Select any one of the Shared Spaces listed
+     </p>
+   <img src="https://i.imgur.com/RrIbm9X.png" style="max-width: 100%; height: auto; border-radius: 4px; display: block; margin: 15px 0;">
+    <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">5.6</strong> Select deployment Environment as <strong>Sandbox</strong>
+     </p>
+     <img src="https://i.imgur.com/AEM3dIP.png" style="max-width: 100%; height: auto; border-radius: 4px; display: block; margin: 15px 0;">
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">5.7</strong> Click <strong>Deploy</strong>
+     </p>
+     <img src="https://i.imgur.com/UjgWHvr.png" style="max-width: 100%; height: auto; border-radius: 4px; display: block; margin: 15px 0;">
+   
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">5.8</strong> Select  <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">runtime version as Java 17 </strong>
+   </p>
+   <img src="https://i.imgur.com/fA3EX7C.png" style="max-width: 100%; height: auto; border-radius: 4px; display: block; margin: 15px 0;">
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">5.9</strong> Specify  asset version as <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;"> 1.0.0</strong>
+   </p>
+   <img src="https://i.imgur.com/Y2JvJa7.png" style="max-width: 100%; height: auto; border-radius: 4px; display: block; margin: 15px 0;">
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">5.10</strong> Open Runtime Manager to verify that the application is deployed to CloudHub
+
+   </p>
+   <img src="https://i.imgur.com/mzWYHMK.png" style="max-width: 100%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">5.11</strong> Test final CloudHub request:
+   </p>
+   <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+      curl --location 'yourcloudhubURL/contract' \<br>
+      --header 'Content-Type: application/json' \<br>
+      --data '{"partName" : "SFP-10G-T-CAT-AO"}'
+   </div>
+  </div>
+   
+ </div>
+</div>

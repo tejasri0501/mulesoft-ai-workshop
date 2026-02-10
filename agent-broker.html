@@ -1,0 +1,357 @@
+<div style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; padding: 30px; background-color: white; border-radius: 8px; max-width: 1200px; margin: 0 auto;">
+  
+ <h1 style="color: #1565c0; margin-bottom: 15px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; font-size: 28px; margin-top: 0;">Module 4: Building the Agent Orchestration </h1>
+  
+ <p style="color: #666666; font-size: 16px; margin-bottom: 40px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; line-height: 1.5;">
+  The Broker acts as the "brain," routing requests between specialized agents.
+ </p>
+  
+ <div style="border-left: 4px solid #e0e0e0; padding: 25px; margin-bottom: 30px; background-color: white;">
+ 
+ <div style="background: linear-gradient(90deg, #059669 0%, #047857 100%); color: white; padding: 15px 20px; border-radius: 6px; margin-bottom: 30px;">
+  <h2 style="color: white; margin: 0; font-size: 18px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-weight: 600;">Exercise: Setting up the Agent Broker</h2>
+ </div>
+
+  <!-- Main Step 1 -->
+  <h3 style="color: #1976d2; font-size: 18px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; margin-bottom: 20px; margin-top: 0;">1. Create Agent Network:</h3>
+  
+ <div style="margin-left: 30px; line-height: 1.8;">
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">1.1</strong> <strong> Create a new Mule Project: </strong>  Click on Mule logo in the left menu bar.  Select <strong> Create an Agent Network </strong> and create new project with
+   </p>
+    <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+      Project Name: {initials}-a2a-server-listener
+      <br>Business Group: anypoint-cbp122444(similar to this)
+   </div>
+   
+   <img src="https://i.imgur.com/xmTHjO1.png" style="max-width: 80%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">1.2</strong> <strong> agent-network.yaml </strong> specifies brokers, agents, MCP servers, LLMs, policies, and authentication in your agent network. Replace existing agent-network.yaml with below configuration, make sure to replace <strong> &lt;your-initials&gt; </strong> in the below configuration with your initials 
+   </p>
+  <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+ <pre style="margin: 0; color: inherit;">
+schemaVersion: 1.0.0
+label: &lt;your initials&gt;-inventory-contract-network
+brokers:
+   &lt;your initials&gt;-inventory-contract-broker:
+       card:
+           protocolVersion: 0.3.0
+           name: &lt;your initials&gt;-inventory-contract-broker
+           description: The broker allows us to get the inventory and contract details for a specified part.
+           url: ${ingressgw.url}/&lt;your initials&gt;-inventory-contract-broker
+           capabilities:
+               pushNotifications: true
+           version: 1.0.0
+           securitySchemes: {}
+           defaultInputModes:
+               - application/json
+               - text/plain
+           defaultOutputModes:
+               - application/json
+               - text/plain
+           skills:
+               - id: inventory-contract
+                 name: inventory-contract
+                 description: Get the inventory and contract details for a specified part.
+                 examples:
+                     - Can you get me parts info for SFP-10G-T-CAT-AO and also contract information.
+                 inputModes:
+                   - application/json
+                   - text/plain
+                 outputModes:
+                   - application/json
+                   - text/plain
+                 tags: [inventory-agent]
+       spec:
+           llm:
+               ref:
+                   name: google-gemini
+               configuration:
+                   model: ${googleGemini.modelName}
+                   gemini:
+                       temperature: 0.3
+                       topP: 0.95
+                       responseLogprobs: false
+                       maxOutputTokens: 5000
+           instructions:
+               - if user is asking only for parts information. Fetch the inventory or part information using inventory-agent get all the necssary information,
+                  if user is asking only for parts information and contract information once you fetch details inventory-agent if
+                  using same part number call contract-mcp-server and get contract details.
+           links:
+               - agent:
+                     ref:
+                         name: inventory-agent
+           tools:
+               - mcp:
+                     ref:
+                         name: contract-mcp-server
+agents:
+   inventory-agent:
+       label: inventory-agent
+       metadata:
+           protocol: a2a
+           platform: agentforce
+mcpServers:
+   contract-mcp-server:
+       label: contract-mcp-server
+       metadata:
+           transport:
+               kind: streamableHttp
+               path: /mcp
+llmProviders:
+   google-gemini:
+       label: Google Gemini
+       description: Google Gemini LLM Provider
+       metadata:
+           platform: Gemini
+connections:
+   inventoryAgentConnection:
+       kind: agent
+       ref:
+           name: inventory-agent
+       spec:
+           url: ${inventory-agent.url}
+   contractmMcpServerConnection:
+       kind: mcp
+       ref:
+           name: contract-mcp-server
+       spec:
+           url: ${contract-mcp-server.url}
+   google-gemini-connection:
+       kind: llm
+       ref:
+           name: google-gemini
+       spec:
+           url: ${googleGemini.url}
+           configuration:
+               apiKey: ${googleGemini.apiKey}
+               timeout: 600000
+</pre>
+</div>
+<img src="https://i.imgur.com/O5FpSDP.png" style="max-width: 80%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+</div>
+
+<h3 style="color: #1976d2; font-size: 18px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; margin-bottom: 20px; margin-top: 40px;">2. Configure exchange.json:</h3>
+<div style="margin-left: 30px; line-height: 1.8;">
+<p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">2.1</strong> <strong> exchange.json </strong> specifies Anypoint Exchange assets that are referenced in your agent network, as well as the <strong> variables </strong> to use in your agent network. Just replace below <strong> metadata </strong> snippet in exchange.json, <strong> Important: Do not replace the complete exchange.json file</strong>. Also, replace the parameters marked in red with correct values based on previous deployments.
+   </p>
+    <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+      inventory-agent: CloudHub URL for deployed A2A Server
+<br> contract-mcp-server: CloudHub URL for deployed MCP server
+<br> apikey: Salesforce will be providing the key
+   </div>
+   
+   <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+ <pre style="margin: 0; color: inherit;">
+"metadata": {
+   "variables": {
+     "inventory-agent": {
+       "url": {
+         "description": "get inventory details from agentforce",
+         "default": "replace with your URL/agentforce-agent",
+         "secret": false
+       }
+     },
+     "contract-mcp-server": {
+       "url": {
+         "description": "get contract details from salesforce",
+         "default": "point to your mcp url",
+         "secret": false
+       }
+     },
+     "googleGemini": {
+       "url": {
+         "description": "Google Gemini API URL",
+         "default": "https://generativelanguage.googleapis.com/",
+         "secret": false
+       },
+       "modelName": {
+         "description": "Google Gemini Model Name",
+         "default": "gemini-2.5-flash",
+         "secret": false
+       },
+       "apiKey": {
+         "description": "Google Gemini API key",
+         "default": "&lt;gemini API Key here&gt;",
+         "secret": true
+       }
+     }
+   }
+ }
+</pre>
+</div>
+<img src="https://i.imgur.com/IJpNhZs.png" style="max-width: 80%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+</div>
+
+<h3 style="color: #1976d2; font-size: 18px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; margin-bottom: 20px; margin-top: 40px;">3. Publish Agent Network Assets to Anypoint Exchange:</h3>
+<div style="margin-left: 30px; line-height: 1.8;">
+<p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">3.1</strong> 
+<strong> Publish Agent Network Assets to Anypoint Exchange </strong>- This procedure builds and publishes your broker group to Anypoint Exchange - this is the registry & repository for all AI assets (MCP Servers, Agents, Agent Brokers) & integration assets (API's, connectors, integration applications & templates etc.)
+   </p>
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">3.2</strong> In Anypoint Code Builder, open the <strong>  Command Palette. </strong>
+   </p>
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">3.3</strong> Select <strong>  MuleSoft: Publish Agent Network Assets. </strong>
+   </p>
+   <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+      <img src="https://i.imgur.com/kSDtCUl.png" style="width: 50%; height: auto; border-radius: 4px;">
+      <div style="font-size: 24px; color: #333; margin: 0 10px;">→</div>
+      <img src="https://i.imgur.com/EQGlUhD.png" style="width: 45%; height: auto; border-radius: 4px;">
+   </div>
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">3.4</strong> Enter  <strong>  asset version  </strong> and click <strong> Publish </strong>
+   </p>
+   <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+      <img src="https://i.imgur.com/oAfZZmP.png" style="width: 50%; height: auto; border-radius: 4px;">
+      <div style="font-size: 24px; color: #333; margin: 0 10px;">→</div>
+      <img src="https://i.imgur.com/uvTwkQs.png" style="width: 45%; height: auto; border-radius: 4px;">
+   </div>
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">3.5</strong> The broker group asset is published to <strong> Anypoint Exchange </strong> with the defined agent cards and external services (agents and MCP servers).    
+   </p>
+   <img src="https://i.imgur.com/8Yi9CHq.png" style="max-width: 80%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+</div>
+
+<h3 style="color: #1976d2; font-size: 18px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; margin-bottom: 20px; margin-top: 40px;">4. Deploy Agent Network:</h3>
+<div style="margin-left: 30px; line-height: 1.8;">
+<p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">4.1</strong> In Anypoint Code Builder, open the Command Palette.  
+   </p>
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">4.2</strong> Select MuleSoft: <strong>Deploy Agent Network. </strong>  
+   </p>
+   <img src="https://i.imgur.com/xHWoYJE.png" style="max-width: 80%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+<p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">4.3</strong> Enter the following information,
+   </p>
+   <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+     Environment: Sandbox
+<br> Deployment Target: google-private-space, 
+<br> Ingress Gateway: agent-network-ingress-gw
+<br>  Egress Gateway: agent-network-egress-gw
+   </div>
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">4.4</strong> Click on  <strong> Deploy </strong>
+
+   </p>
+   <img src="https://i.imgur.com/crxBMby.png" style="max-width: 80%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+<p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">4.5</strong> Your broker group project is deployed   <strong> deployed </strong> and ready to be tested
+
+   </p>
+   <img src="https://i.imgur.com/SujCQPb.png" style="max-width: 80%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">4.6</strong> All the Agent and MCP assets are now managed via <strong> API manager </strong> - it allows you to govern, manage and secure API's and AI assets
+
+   </p>
+   <img src="https://i.imgur.com/qM1GwnT.png" style="max-width: 80%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+</div>
+   
+<h3 style="color: #1976d2; font-size: 18px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; margin-bottom: 20px; margin-top: 40px;">5. Executing the Agent Network:</h3>
+<div style="margin-left: 30px; line-height: 1.8;">
+<p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">5.1</strong> Get the Ingress gateway URL for the broker - Ingress gateway protects your agent network by allowing you to apply governance policies
+
+   </p>
+    <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">5.2</strong> On Anypoint platform, select <strong> Runtime Manager </strong>
+
+   </p>
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">5.3</strong> On the <strong> Runtime Manager </strong> page, select <strong> Flex Gateways → agent-network-ingress-gw </strong>
+
+   </p>
+   <div style="margin-left: 30px;">
+   <img src="https://i.imgur.com/nyf6cD8.png" style="max-width: 80%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+   </div>
+   
+<p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">5.4</strong> Copy the <strong> Public endpoint url  </strong>
+
+   </p>
+<img src="https://i.imgur.com/eqmj6GO.png" style="max-width: 80%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">5.5 </strong> Append your agent broker name to the end of this url - 
+</p>
+<div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+      https://agent-network-ingress-gw-tb6jai.rioqsq.usa-e2.cloudhub.io/&lt;your agent broker&gt; 
+<br>(for e.g. - https://agent-network-ingress-gw-tb6jai.rioqsq.usa-e2.cloudhub.io/pjsfdc-inventory-contract-broker)
+   </div>
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">5.6 </strong> Use the following curl command to invoke the agent broker,
+</p>
+<div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+      curl --location 'https://agent-network-ingress-gw-tb6jai.rioqsq.usa-e2.cloudhub.io/hb-inventory-contract-broker/' \<br>
+--header 'Content-Type: application/json' \<br>
+--data '{<br>
+  "jsonrpc": "2.0",<br>
+  "id": 12345,<br>
+  "method": "message/send",<br>
+  "params": {<br>
+    "message": {<br>
+       "role": "user",<br>
+       "kind": "message",<br>
+      "parts": [<br>
+        {<br>
+         "kind": "text",<br>
+         "text": "Can you get me parts info for SFP-10G-T-CAT-AO and contract information for the same?"<br>
+        }<br>
+      ],<br>
+      "messageId": "b69d3e84-7135-47f8-80be-7d0563913082"<br>
+    },<br>
+    "metadata": {}<br>
+  }<br>
+}'
+   </div>
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">5.7 </strong> Sample response here,
+</p>
+<div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+ <pre style="margin: 0; color: inherit;">
+{
+   "id": 12345,
+   "jsonrpc": "2.0",
+   "result": {
+       "artifacts": [
+           {
+               "artifactId": "7da1a1b4-618e-4d07-99f8-7e2522213d00",
+               "parts": [
+                   {
+                       "kind": "text",
+                       "text": "Here is the information for SFP-10G-T-CAT-AO:\n\n**Parts Information:**\n- Part: SFP-10G-T-CAT-AO\n- Stock Status: IN STOCK (224 units available)\n- Price: $89.99\n- Description: Cisco® 10GBase-TX SFP+ Transceiver, Copper 30m, RJ-45, TAA Compliant, MSA compatible\n\n**Contract Information:**\n- Contract Price: 1000\n- Standard Price: 2000\n- Contract Status: Draft\n- Contract Start Date: 2026-01-28\n- Contract End Date: 2028-11-27\n- Contract Number: 00000101"
+                   }
+               ]
+           }
+       ],
+       "contextId": "1db76a77-3db9-4670-b2e8-eb67d52ca72a",
+       "history": [],
+       "id": "70a40442-ea41-458b-b730-3d979a509c45",
+       "kind": "task",
+       "status": {
+           "state": "completed",
+           "timestamp": "2026-02-05T06:55:42.227143229Z"
+       },
+       "url": "https://agent-network-ingress-gw-tb6jai.rioqsq.usa-e2.cloudhub.io/pjsfdc-inventory-contract-broker/"
+   }
+}
+</pre>
+   </div>
+</div>
+
+   <h3 style="color: #1976d2; font-size: 18px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; margin-bottom: 20px; margin-top: 40px;">6. Troubleshooting & Notes:</h3>
+   <div style="margin-left: 30px; line-height: 1.8;">
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">6.1 </strong> Credentials: Ensure your Gemini API Key is stored as a secret in exchange.json.
+URLs: When deploying to CloudHub, always update your agent.host properties to match the newly generated public endpoint.
+Once a project is deployed , go to Anypoint platform -> login into your account -> click on Runtimes ->select environment -? select a2a-agentforce-agent project. Click on settings -> click on properties tab and add the following property
+agent.host=&lt;Copy & Paste A2A Project URL&gt; (For example, https://google-a2a-agentforce-agent-3ujrc9.5sc6y6-1.usa-e2.cloudhub.io ) (update this accordingly)
+</p>
+<img src="https://i.imgur.com/IPUTXoR.png" style="max-width: 80%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+  </div>
+ </div>
+</div>

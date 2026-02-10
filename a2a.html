@@ -1,0 +1,409 @@
+<div style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; padding: 30px; background-color: white; border-radius: 8px; max-width: 1200px; margin: 0 auto;">
+  
+ <h1 style="color: #1565c0; margin-bottom: 15px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; font-size: 28px; margin-top: 0;">Module 3: Building the Agent 2 Agent Protocol (A2A) </h1>
+  
+ <p style="color: #666666; font-size: 16px; margin-bottom: 40px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; line-height: 1.5;">
+  In this exercise, you will build a Mule A2A application that connects with Agentforce agent.
+ </p>
+  
+ <div style="border-left: 4px solid #e0e0e0; padding: 25px; margin-bottom: 30px; background-color: white;">
+ 
+ <div style="background: linear-gradient(90deg, #059669 0%, #047857 100%); color: white; padding: 15px 20px; border-radius: 6px; margin-bottom: 30px;">
+  <h2 style="color: white; margin: 0; font-size: 18px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-weight: 600;">Exercise: Implement A2A Standard on an existing Agentforce agent</h2>
+ </div>
+
+  <!-- Main Step 1 -->
+  <h3 style="color: #1976d2; font-size: 18px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; margin-bottom: 20px; margin-top: 0;">1. Create a new Mule Project:</h3>
+  
+ <div style="margin-left: 30px; line-height: 1.8;">
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">1.1</strong> Click on in the left menu bar. Select <strong> Develop an Integration </strong> and create new project with name
+   </p>
+   <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+      Project Name: {initials}-a2a-server-listener
+   </div>
+   
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">1.2</strong> Select <strong> Start from Scratch → Build a Flow </strong>
+   </p>
+   <p style="color: #555555; margin-bottom: 20px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">1.3</strong> Select <strong> Flow Name 1</strong>, Edit in the configuration panel to change it to
+   </p>
+   <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+      Flow Name: a2a-server-listener
+   </div>
+   
+<div style="display: flex; flex-direction: column; align-items: center; margin: 20px 0;">
+   <!-- Top row with 3 images and arrows -->
+   <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+      <img src="https://i.imgur.com/TaGAppC.png" style="width: 30%; height: auto; border-radius: 4px;">
+      <div style="font-size: 24px; color: #333; margin: 0 10px;">→</div>
+      <img src="https://i.imgur.com/mPR2MR6.png" style="width: 30%; height: auto; border-radius: 4px;">
+      <div style="font-size: 24px; color: #333; margin: 0 10px;">→</div>
+      <img src="https://i.imgur.com/znfI5B6.png" style="width: 30%; height: auto; border-radius: 4px;">
+   </div>
+   
+   <!-- Down arrow -->
+   <div style="font-size: 24px; color: #333; margin: 10px 0;">↓</div>
+   
+   <!-- Bottom image -->
+   <img src="https://i.imgur.com/MmFD5IF.png" style="max-width: 80%; height: auto; border-radius: 4px;">
+</div>
+  </div>
+
+    <h3 style="color: #1976d2; font-size: 18px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; margin-bottom: 20px; margin-top: 40px;">2. Import A2A Connector:</h3>
+    <div style="margin-left: 30px; line-height: 1.8;">
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+    <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">2.1</strong> Click on <strong> pom.xml </strong> in package explorer and add the following dependency for A2A </p>
+     <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+<pre style="margin: 0; color: inherit;">&lt;dependencies&gt;
+  &lt;dependency&gt;
+    &lt;groupId&gt;com.mulesoft.connectors&lt;/groupId&gt;
+    &lt;artifactId&gt;mule4-a2a-connector&lt;/artifactId&gt;
+    &lt;version&gt;0.4.0-BETA&lt;/version&gt;
+    &lt;classifier&gt;mule-plugin&lt;/classifier&gt;
+  &lt;/dependency&gt;
+&lt;/dependencies&gt;</pre>
+</div>
+   <img src="https://i.imgur.com/CI29RzB.png" style="max-width: 80%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+   </div>
+
+   <h3 style="color: #1976d2; font-size: 18px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; margin-bottom: 20px; margin-top: 40px;">3. Configure A2A Connector:</h3>
+   <div style="margin-left: 30px; line-height: 1.8;">
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">3.1</strong> Click on <strong> + </strong> in the flow path on the main canvas </p>
+
+<p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">3.2</strong> Search for <strong> A2A connector </strong> </p>
+
+<p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">3.3</strong> Select <strong> Task Listener </strong> operation within the A2A connector, make sure the connector version is <strong> 0.4.0-BETA </strong>
+ </p>
+<img src="https://i.imgur.com/uVmyEJT.png" style="max-width: 80%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+
+<p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">3.4</strong> Select <strong> Task Listener </strong> that was just added </p>
+     <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">3.5</strong> Click on <strong> + </strong> sign next to <strong> Connection Config </strong> to add <strong> A2A Server configuration </strong> </p>
+<div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+      Agent path - /agentforce-agent
+<br>Agent Name - ${agent.name}
+<br>Agent URL - ${agent.host}/agentforce-agent
+<br>Agent Version - 1.0.0
+<br>Agent Description - ${agent.description}
+   </div>
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+      <img src="https://i.imgur.com/5q3JTtK.png" style="width: 30%; height: auto; border-radius: 4px;">
+      <div style="font-size: 24px; color: #333; margin: 0 10px;">→</div>
+      <img src="https://i.imgur.com/ZY6Hlv3.png" style="width: 30%; height: auto; border-radius: 4px;">
+  </div>
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">3.6</strong> <strong> Listener Configuration </strong> - Click on <strong> + </strong> , Add
+   </p>
+<div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+     host: 0.0.0.0 
+     <br>port: 8081
+   </div>
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">click on add</p>
+   </div>
+   
+      <h3 style="color: #1976d2; font-size: 18px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; margin-bottom: 20px; margin-top: 40px;">4. A2A Server Configuration:</h3>
+      <div style="margin-left: 30px; line-height: 1.8;">
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">4.1</strong> Now back on the <strong> A2A Server </strong> configuration page, add <strong> Agent Skills </strong>
+ </p>
+  <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">4.2</strong> Click on <strong> + </strong> Add in the <strong> Agent Skills </strong> section and enter the following values,
+ </p>
+<div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+     Skill ID: ${agent.skill.id}
+<br> Skill Name: ${agent.skill.name}
+<br>  Skill Description: ${agent.skill.description}
+   </div>
+   <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+      <img src="https://i.imgur.com/f2rmnDa.png" style="width: 30%; height: auto; border-radius: 4px;">
+      <div style="font-size: 24px; color: #333; margin: 0 10px;">→</div>
+      <img src="https://i.imgur.com/lQ6nvex.png" style="width: 30%; height: auto; border-radius: 4px;">
+  </div>
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">4.3</strong> Add remaining <strong> A2A Server configuration </strong>,    
+ </p>
+ <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+     Agent Provider Organization: salesforce
+ <br>Protocol Version: 0.3.0
+
+   </div>
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">4.4</strong> Click <strong> Add </strong> to save the <strong> A2A Server configuration </strong>
+ </p>
+ <img src="https://i.imgur.com/t4c3CqM.png" style="max-width: 80%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+<p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">4.5</strong> Store prompt received via <strong> A2A Listener </strong> in a variable
+ </p>
+ <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">4.6</strong> Click on <strong> + </strong> in the flow path right below <strong> Task Listener </strong>
+
+ </p>
+  <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">4.7</strong> Search for <strong> variable </strong> component and select <strong> set variable </strong> to add to canvas
+</p>
+<div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+     Variable name: prompt
+     <br> Value: Click on fx and add payload.message.parts[0].text
+   </div>
+   <img src="https://i.imgur.com/Px9CIPo.png" style="max-width: 80%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+ <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">4.8</strong> Add and configure <strong> Agentforce Connector </strong> to connect to <strong> Agentforce agent </strong>
+</p>
+<p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">4.9</strong> Click on <strong> + </strong> in the flow path right below variable
+</p>
+<p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">4.10</strong> Search for <strong>Agentforce </strong> connector and select <strong> Start agent conversation </strong> to add to canvas
+</p>
+   <img src="https://i.imgur.com/4R1C4AG.png" style="max-width: 80%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">4.11</strong> Configure Agentforce Connector Connection </p>
+      <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">4.12</strong> Select <strong> Start agent conversation </strong> that was just added and click on <strong> + </strong> sign next to Connection Config to add connector configuration
+     </p>
+
+<div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+     Connection name: oAuth Client Credentials
+     <br> Client Id: provided by MuleSoft
+     <br> Client Secret: provided by MuleSoft
+     <br> Token url: provided by MuleSoft
+   </div>
+   <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">Click <strong> Add </strong></p>
+   
+ <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+      <img src="https://i.imgur.com/10vQQRr.png" style="width: 30%; height: auto; border-radius: 4px;">
+      <div style="font-size: 24px; color: #333; margin: 0 10px;">→</div>
+      <img src="https://i.imgur.com/aGWN6Bh.png" style="width: 30%; height: auto; border-radius: 4px;">
+  </div>
+ <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">4.13</strong> Click on the <strong> Agent List </strong> dropdown, select <strong>  Agentforce Inventory Agent </strong> </p>
+      <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">4.14</strong> Bypass User:  <strong> true </strong> </p>
+ <img src="https://i.imgur.com/oh2w3n7.png" style="max-width: 80%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+  <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">4.15</strong> Add and configure Agentforce Connector to connect to pass on the prompt to Agentforce agent
+ </p>
+ <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">4.16</strong> Click on <strong> + </strong>  in the flow path right below <strong> Start agent conversation </strong> 
+
+ </p>
+  <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">4.17</strong> Search for  <strong> Agentforce </strong>  connector and select <strong> Continue agent conversation </strong> to add to canvas
+
+ </p>
+ <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+     Message: vars.prompt
+<br> Session id: enable fx and add payload.sessionId
+<br> Message Sequence Number: 10
+   </div>
+   <img src="https://i.imgur.com/tMxX8l3.png" style="max-width: 80%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+   </div>
+   
+ <h3 style="color: #1976d2; font-size: 18px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; margin-bottom: 20px; margin-top: 40px;">5. Add Transform Processor:</h3>
+ <div style="margin-left: 30px; line-height: 1.8;">
+ <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">5.1</strong> Click on <strong> + </strong> in the flow path below the Continue agent conversation
+
+ </p>
+ <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">5.2</strong> Search for <strong> Transform </strong>  and add it to the canvas
+
+
+ </p>
+ <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">5.3</strong> Add following to the Inline Script,
+
+
+ </p>
+    <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+ <pre style="margin: 0; color: inherit;">
+  %dw 2.0
+output application/json
+---
+{
+    id: uuid(),
+   "contextId": uuid(),
+   "status": {
+     "state": "completed"
+   },
+   "artifacts": [
+     {
+       "artifactId": uuid(),
+       "name": "task",
+       "parts": [
+         {
+           "kind": "text",
+           "text": payload
+         }
+       ]
+     }
+   ],
+   "kind": "task",
+   "metadata": {}
+}
+</pre>
+</div>
+<img src="https://i.imgur.com/nQcia23.png" style="max-width: 80%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+</div>
+
+<h3 style="color: #1976d2; font-size: 18px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; margin-bottom: 20px; margin-top: 40px;">6. Create configuration.yaml file:</h3>
+<div style="margin-left: 30px; line-height: 1.8;">
+<p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">6.1</strong> Create <strong> configuration.yaml  </strong>  file in package explorer to store agent properties used by the A2A connector configuration - <strong> right click on src/main/resources </strong> and select new file: <strong> configuration.yaml </strong>
+
+ </p>
+ <img src="https://i.imgur.com/r62QYsz.png" style="max-width: 80%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+<p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">6.2</strong> <strong> Add below properties to the file </strong> 
+
+ </p>
+ <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+ <pre style="margin: 0; color: inherit;">
+  agent:
+ name: "Agentforce Agent"
+ host: "http://localhost:8081"
+ description: "Agentforce Agent who is an expert on Kony App, Battery life and Return Process"
+ iconUrl: "https://raw.githubusercontent.com/MuleSoft-AI-Chain-Project/
+            example-mule-apps/refs/heads/master/a2a-ail-demo/a2a-interaction-agent-app/
+            src/main/resources/uiapp/assets/images/agentforceagent.png"
+ documentationUrl: "https://developer.salesforce.com/docs/einstein/genai/overview"
+ providerOrganization: "Salesforce"
+ providerUrl: "https://www.salesforce.com"
+ skill.id: "1"
+ skill.name: "get-sku"
+ skill.description: "Searches for parts information based on the sku provided"
+</pre>
+</div>
+<img src="https://i.imgur.com/BjcC4Uy.png" style="max-width: 80%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+</div>
+
+<h3 style="color: #1976d2; font-size: 18px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; margin-bottom: 20px; margin-top: 40px;">7. Add configuration properties:</h3>
+<div style="margin-left: 30px; line-height: 1.8;">
+<p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">7.1</strong> Select <strong> /source/main/mule/yourinitials-a2a-agentforce-agent.xml, </strong> then click on <strong> Open in Code Editor &lt;/&gt; </strong> in the right top corner of the IDE and add the following line to the xml file as shown below,
+
+
+ </p>
+ <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+   &lt;configuration-properties file="configuration.yaml" doc:name="Configuration properties" /&gt;
+   </div>
+   <img src="https://i.imgur.com/tsc6SRd.png" style="max-width: 80%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+
+<img src="https://i.imgur.com/UJKYp8x.png" style="max-width: 80%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+</div>
+
+ <h3 style="color: #1976d2; font-size: 18px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif; font-weight: 600; margin-bottom: 20px; margin-top: 40px;">8. Local Validation:</h3>
+ <div style="margin-left: 30px; line-height: 1.8;">
+<p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">8.1</strong> Select
+ <strong> Run Mule Application </strong>  to run the application locally
+  </p>
+<img src="https://i.imgur.com/3JhCDCf.png" alt="Interface" style="max-width: 100%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+<p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">8.2</strong>  Confirm that the application has started successfully
+  </p>
+<img src="https://i.imgur.com/EESHMZp.png" alt="Interface" style="max-width: 100%; height: auto; border-radius: 4px; display: block; margin: 20px 0;">
+  <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">8.3</strong>  Use <strong> curl </strong> in Terminal to fire the following request
+  </p>
+  <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+ <pre style="margin: 0; color: inherit;">
+  curl --location 'http://localhost:8081/agentforce-agent' \
+--header 'Content-Type: application/json' \
+--data '{
+  "jsonrpc": "2.0",
+  "id": 12345,
+  "method": "message/send",
+  "params": {
+    "message": {
+       "role": "user",
+       "kind": "message",
+      "parts": [
+        {
+         "kind": "text",
+          "text": "Can you get me parts info for SFP-10G-T-CAT-AO"
+        }
+      ],
+      "messageId": "b69d3e84-7135-47f8-80be-7d0563913082"
+    },
+    "metadata": {}
+  }
+}'
+</pre>
+</div>
+<p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">8.4</strong>  Successful response would be as below,
+  </p>
+  <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+ <pre style="margin: 0; color: inherit;">
+  {
+  "jsonrpc": "2.0",
+  "id": 12345,
+  "result": {
+    "id": "28e99ba0-706e-40e6-ac0a-2f24d10b93f6",
+    "contextId": "86cf3c0b-3f1a-4f9a-aaf2-2bf02eb2be38",
+    "status": {
+      "state": "completed"
+    },
+    "artifacts": [
+      {
+        "artifactId": "acd9d19e-dec2-4176-8642-964e6c72fcb9",
+        "name": "task",
+        "parts": [
+          {
+            "kind": "text",
+            "text": "Here is the information for the part you requested:\n\n- SKU: SFP-10G-T-CAT-AO\n- Stock: 
+                     IN STOCK (224 units)\n- Price: $89.99\n- Description: Cisco® 10GBase-TX SFP+ 
+                     Transceiver, Copper 30m, RJ-45, TAA Compliant, MSA compatible\n\nLet me know if you need anything else!"
+          }
+        ]
+      }
+    ],
+    "kind": "task",
+    "metadata": {
+      
+    }
+  }
+}
+</pre>
+</div>
+<p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">8.5</strong>  <strong> Deploy A2A Server Application to CloudHub 2.0 </strong> - Use Dev Agent to deploy the application to CloudHub 2.0 with the following prompt - <strong> Deploy the application to CloudHub 2.0. Use Mule 4.10.0 runtime </strong>
+  </p>
+  <p style="color: #555555; margin-bottom: 10px; font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">
+     <strong style="font-family: 'Avant Garde SFDC', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;">8.6</strong>  <strong> Use the curl command to validate the deployment, </strong>
+  </p>
+  <div style="background-color: #333; color: #fff; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px; margin-bottom: 20px;">
+ <pre style="margin: 0; color: inherit;">
+  curl --location 'https://{the agentforce agent app URL}/agentforce-agent' \
+--header 'Content-Type: application/json' \
+--data '{
+  "jsonrpc": "2.0",
+  "id": 12345,
+  "method": "message/send",
+  "params": {
+    "message": {
+       "role": "user",
+       "kind": "message",
+      "parts": [
+        {
+         "kind": "text",
+          "text": "Can you get me parts info for SFP-10G-T-CAT-AO"
+        }
+      ],
+      "messageId": "b69d3e84-7135-47f8-80be-7d0563913082"
+    },
+    "metadata": {}
+  }
+}'
+</pre>
+</div>
+  </div>
+ </div>
+</div>
